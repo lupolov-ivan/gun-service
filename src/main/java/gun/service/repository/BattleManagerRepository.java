@@ -2,27 +2,33 @@ package gun.service.repository;
 
 import gun.service.dto.UnitDamageDto;
 import gun.service.dto.UnitDto;
+import gun.service.service.systems.Battlefield;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class UnitDataRepository {
+public class BattleManagerRepository {
 
     private final RestTemplate restTemplate;
 
-    public Optional<UnitDto> getByCoordinate(Integer posX, Integer posY) {
+    public UnitDto findUnitByCoordinate(Integer posX, Integer posY) {
 
         String url = "http://localhost:8080/units/x/"+ posX +"/y/" + posY;
 
-        return Optional.ofNullable(restTemplate.getForObject(url, UnitDto.class));
+        try {
+            ResponseEntity<UnitDto> response = restTemplate.getForEntity(url, UnitDto.class);
+            return response.getBody();
+        } catch (HttpClientErrorException ignored) { }
+
+        return null;
     }
 
-    public void damage(UnitDamageDto damageDto) {
+    public void setUnitDamage(UnitDamageDto damageDto) {
 
         String url = "http://localhost:8080/units/damage";
         HttpEntity<UnitDamageDto> request = new HttpEntity<>(damageDto);
@@ -30,11 +36,18 @@ public class UnitDataRepository {
         restTemplate.patchForObject(url,request, Void.class);
     }
 
-    public void registerOnBattlefield(UnitDto unitDto) {
+    public void registerUnitOnBattlefield(UnitDto unitDto) {
 
         String url = "http://localhost:8080/units/";
         HttpEntity<UnitDto> request = new HttpEntity<>(unitDto);
 
         restTemplate.postForObject(url,request, Void.class);
+    }
+
+    public Battlefield getBattlefield() {
+
+        String url = "http://localhost:8080/battlefield/info";
+
+        return restTemplate.getForObject(url, Battlefield.class);
     }
 }

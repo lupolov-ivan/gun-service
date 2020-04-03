@@ -1,16 +1,14 @@
 package gun.service.service.systems.fire;
 
 import gun.service.dto.UnitDto;
-import gun.service.service.systems.loading.AutomationLoadingSystem;
 import gun.service.exceptions.ShellJammedException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import gun.service.service.systems.loading.AutomationLoadingSystem;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class FireSystem3000 extends FireSystem {
-
-    Logger log = LoggerFactory.getLogger(FireSystem3000.class);
 
     private AutomationLoadingSystem loadingSystem;
 
@@ -31,7 +29,7 @@ public class FireSystem3000 extends FireSystem {
         try {
             isJammed();
         } catch (ShellJammedException e) {
-            log.debug("Shell is Jammed. Extracting shell...");
+            log.info("Shell is Jammed. Extracting shell...");
             loadingSystem.extractShell();
         }
 

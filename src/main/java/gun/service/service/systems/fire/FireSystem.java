@@ -4,11 +4,9 @@ package gun.service.service.systems.fire;
 import gun.service.dto.UnitDto;
 import gun.service.exceptions.ShellJammedException;
 import gun.service.service.ammunition.Shell;
-import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
-@Service
 public abstract class FireSystem {
 
     protected int shotPeriod;

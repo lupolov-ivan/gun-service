@@ -1,14 +1,12 @@
 package gun.service.service.systems.loading;
 
 import gun.service.entity.UnitType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class AutomationLoadingSystem3000 extends AutomationLoadingSystem {
-
-    Logger log = LoggerFactory.getLogger(AutomationLoadingSystem3000.class);
 
     @Override
     public boolean loadCassette(UnitType unitType) {

@@ -10,4 +10,5 @@ public class UnitDto {
      private Integer posY;
      private Integer protectionLevel;
      private UnitType unitType;
+     private Boolean isAlive;
 }

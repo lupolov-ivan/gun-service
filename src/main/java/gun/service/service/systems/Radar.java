@@ -1,29 +1,22 @@
 package gun.service.service.systems;
 
 
-import gun.service.repository.UnitDataRepository;
-import gun.service.service.Battlefield;
 import gun.service.dto.UnitDto;
 import gun.service.entity.UnitType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import gun.service.repository.BattleManagerRepository;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
-@Service
+@Slf4j
 public class Radar {
 
-    Logger log = LoggerFactory.getLogger(Radar.class);
-
-    private final UnitDataRepository unitDataRepository;
-
-    private Battlefield battlefield;
+    private final BattleManagerRepository battleManagerRepository;
 
     private Set<UnitType> ignoreTypes;
 
-    public Radar(UnitDataRepository unitDataRepository) {
-        this.unitDataRepository = unitDataRepository;
+    public Radar(BattleManagerRepository battleManagerRepository) {
+        this.battleManagerRepository = battleManagerRepository;
         this.ignoreTypes = new HashSet<>();
     }
 
@@ -31,21 +24,24 @@ public class Radar {
 
         List<UnitDto> enemiesPosition = new ArrayList<>();
 
-        int width = battlefield.getWidth();
-        int length = battlefield.getLength();
+        Battlefield b = battleManagerRepository.getBattlefield();
 
-        log.debug("Radar are starting checking battlefield...");
+        int width = b.getWidth();
+        int length = b.getLength();
+
+        log.info("Radar are starting checking battlefield...");
         for (int y = 0; y < length; y++) {
             for (int x = 0; x < width; x++) {
 
-                Optional<UnitDto> maybeUnit = unitDataRepository.getByCoordinate(x, y);
+                UnitDto unit = battleManagerRepository.findUnitByCoordinate(x, y);
 
-                maybeUnit.ifPresent(enemiesPosition::add);
-
-                log.debug("Detected new enemy: {}", maybeUnit);
+                if (unit != null && unit.getIsAlive() && (unit.getUnitType().equals(UnitType.TANK) || unit.getUnitType().equals(UnitType.INFANTRY))) {
+                    enemiesPosition.add(unit);
+                    log.info("Detected new enemy: {}", unit);
+                }
             }
         }
-        log.debug("Radar finish checking battlefield. Enemy count: {}", enemiesPosition.size());
+        log.info("Radar finish checking battlefield. Enemy count: {}", enemiesPosition.size());
 
         return enemiesPosition;
     }

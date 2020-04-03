@@ -2,17 +2,15 @@ package gun.service.service.systems.aim;
 
 import gun.service.dto.UnitDto;
 import gun.service.entity.UnitType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.random;
 
+@Slf4j
 public class MechanicalInertialAimSystem extends AimingSystem {
-
-    Logger log = LoggerFactory.getLogger(MechanicalInertialAimSystem.class);
 
     private int posX;
     private int posY;
@@ -29,17 +27,16 @@ public class MechanicalInertialAimSystem extends AimingSystem {
         int currentMinDistance = abs(posX - closestTarget.getPosX()) + abs(posY - closestTarget.getPosY());
 
         if(enemies.size() == 1) {
-            log.debug("Catch last target: {}", closestTarget);
+            log.info("Catch last target: {}", closestTarget);
 
             if(closestTarget.equals(lastTarget)) {
-                log.debug("Target caught is the same");
+                log.info("Target caught is the same");
                 countShotSameTarget++;
             } else {
-                log.debug("Target caught is new");
+                log.info("Target caught is new");
                 countShotSameTarget = 1;
             }
             lastTarget = closestTarget;
-            //lastTarget.setAccuracyFactor(computeAccuracyFactor(countShotSameTarget, lastTarget.getUnitType())); TODO: replace to DamageDTO
             return lastTarget;
         }
 
@@ -61,43 +58,42 @@ public class MechanicalInertialAimSystem extends AimingSystem {
             }
         }
 
-        log.debug("Catch new target: {}", closestTarget);
+        log.info("Catch new target: {}", closestTarget);
 
         if(closestTarget.equals(lastTarget)) {
-            log.debug("Target caught is the same");
+            log.info("Target caught is the same");
             lastTarget = closestTarget;
             countShotSameTarget++;
         } else {
-            log.debug("Target caught is new");
+            log.info("Target caught is new");
             lastTarget = closestTarget;
             countShotSameTarget = 1;
         }
-        //lastTarget.setAccuracyFactor(computeAccuracyFactor(countShotSameTarget, lastTarget.getUnitType())); TODO: replace to DamageDTO
         return lastTarget;
     }
 
-    private double computeAccuracyFactor(int shotSameTarget, UnitType unitType) {
-        if (unitType.equals(unitType.TANK)) {
-            if(shotSameTarget == 1) {
+    public double computeAccuracyFactor(UnitType unitType) {
+        if (unitType.equals(UnitType.TANK)) {
+            if(countShotSameTarget == 1) {
                 double min = 0.2;
                 double max = 0.6;
                 return getCoefficient(min, max);
-            } else if (shotSameTarget == 2) {
+            } else if (countShotSameTarget == 2) {
                 double min = 0.5;
                 double max = 0.8;
                 return getCoefficient(min, max);
-            } else if (shotSameTarget >= 3) {
+            } else if (countShotSameTarget >= 3) {
                 double min = 0.8;
                 double max = 1.0;
                 return getCoefficient(min, max);
             }
         }
-        if (unitType.equals(unitType.INFANTRY)) {
-            if(shotSameTarget == 1) {
+        if (unitType.equals(UnitType.INFANTRY)) {
+            if(countShotSameTarget == 1) {
                 double min = 0.2;
                 double max = 1.0;
                 return getCoefficient(min, max);
-            } else if (shotSameTarget >= 2) {
+            } else if (countShotSameTarget >= 2) {
                 double min = 0.5;
                 double max = 1.0;
                 return getCoefficient(min, max);

@@ -8,7 +8,9 @@ services:
       POSTGRES_DB: gun_service_db
     volumes:
       - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+    expose:
+      - 5433
     ports:
-      - 5432:5432
+      - 5433:5432
 volumes:
   database-data: # named volumes can be managed easier using docker-compose
