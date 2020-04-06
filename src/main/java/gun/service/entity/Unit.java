@@ -22,6 +22,7 @@ public class Unit {
     private UnitType unitType;
 
     private Boolean isAlive;
+    private Integer battlefieldId;
 
     public Unit() {
     }

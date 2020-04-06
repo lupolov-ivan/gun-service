@@ -37,5 +37,4 @@ public class GunController {
         unitService.startPatrolling();
         return ResponseEntity.noContent().build();
     }
-
 }
