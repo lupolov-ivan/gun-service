@@ -1,9 +1,9 @@
-package gun.service.service.systems.loading;
+package gun.service.service.gun.systems.loading;
 
 
 import gun.service.entity.UnitType;
-import gun.service.service.ammunition.Ammunition;
-import gun.service.service.ammunition.Cassette;
+import gun.service.service.gun.ammunition.Ammunition;
+import gun.service.service.gun.ammunition.Cassette;
 
 public abstract class AutomationLoadingSystem {
 
@@ -11,8 +11,8 @@ public abstract class AutomationLoadingSystem {
     protected UnitType currentEnemyTypeCassette;
     protected Ammunition ammunition;
 
-    protected AutomationLoadingSystem() {
-        this.ammunition = Ammunition.createAmmunition();
+    protected AutomationLoadingSystem(Ammunition ammunition) {
+        this.ammunition = ammunition;
     }
 
     abstract public boolean loadCassette(UnitType unitType);

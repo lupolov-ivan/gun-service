@@ -1,60 +1,42 @@
 package gun.service.service;
 
-import gun.service.dto.UnitDto;
 import gun.service.entity.Unit;
-import gun.service.repository.BattleManagerRepository;
+import gun.service.exceptions.NotFoundException;
 import gun.service.repository.UnitRepository;
-import gun.service.service.gun.AutomaticFireComplex;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class UnitService {
 
     private final UnitRepository unitRepository;
-    private final BattleManagerRepository battleManagerRepository;
 
-    public Unit createGun(Unit unit) {
+    public Unit saveUnit(Unit unit) {
         return unitRepository.save(unit);
     }
 
-    public void registerUnitsOnBattlefield() {
-
-        List<Unit> units = unitRepository.findAll();
-
-        units.forEach(unit -> {
-            UnitDto unitDto = new UnitDto();
-
-            unitDto.setPosX(unit.getPosX());
-            unitDto.setPosY(unit.getPosY());
-            unitDto.setProtectionLevel(unit.getProtectionLevel());
-            unitDto.setUnitType(unit.getUnitType());
-            unitDto.setIsAlive(unit.getIsAlive());
-
-            battleManagerRepository.registerUnitOnBattlefield(unitDto);
-        });
+    public List<Unit> saveAllUnit(List<Unit> units) {
+        return unitRepository.saveAll(units);
     }
 
-    public void startPatrolling() {
+    public List<Unit> getUnits() {
+        return unitRepository.findAll();
+    }
 
-        List<Unit> units = unitRepository.findAll();
+    public List<Unit> getUnitsBySubdivisionId(Integer id) {
+        return  unitRepository.findUnitsBySubdivisionId(id);
+    }
 
-        units.forEach(unit -> {
-            AutomaticFireComplex afc = new AutomaticFireComplex(
-                    unit.getPosX(),
-                    unit.getPosY(),
-                    unit.getProtectionLevel(),
-                    unit.getUnitType(),
-                    unit.getIsAlive(),
-                    battleManagerRepository
-            );
-            new Thread(afc).start();
-            log.info("New AFC({}) start patrolling", afc);
-        });
+    public void removeUnitById(Integer id) {
+        unitRepository.findById(id).orElseThrow(NotFoundException::new);
+        unitRepository.deleteById(id);
+    }
+
+    public Optional<Unit> findById(Integer id) {
+        return unitRepository.findById(id);
     }
 }

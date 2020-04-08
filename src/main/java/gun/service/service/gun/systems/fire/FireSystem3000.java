@@ -1,8 +1,8 @@
-package gun.service.service.systems.fire;
+package gun.service.service.gun.systems.fire;
 
 import gun.service.dto.UnitDto;
 import gun.service.exceptions.ShellJammedException;
-import gun.service.service.systems.loading.AutomationLoadingSystem;
+import gun.service.service.gun.systems.loading.AutomationLoadingSystem;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;

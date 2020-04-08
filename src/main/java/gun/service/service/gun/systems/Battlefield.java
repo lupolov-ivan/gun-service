@@ -1,4 +1,4 @@
-package gun.service.service.systems;
+package gun.service.service.gun.systems;
 
 import lombok.Data;
 

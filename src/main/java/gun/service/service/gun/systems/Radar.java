@@ -1,22 +1,25 @@
-package gun.service.service.systems;
+package gun.service.service.gun.systems;
 
 
 import gun.service.dto.UnitDto;
 import gun.service.entity.UnitType;
-import gun.service.repository.BattleManagerRepository;
+import gun.service.service.BattleManagerService;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 public class Radar {
 
-    private final BattleManagerRepository battleManagerRepository;
+    private final BattleManagerService battleManagerService;
 
     private Set<UnitType> ignoreTypes;
 
-    public Radar(BattleManagerRepository battleManagerRepository) {
-        this.battleManagerRepository = battleManagerRepository;
+    public Radar(BattleManagerService battleManagerService) {
+        this.battleManagerService = battleManagerService;
         this.ignoreTypes = new HashSet<>();
     }
 
@@ -24,7 +27,7 @@ public class Radar {
 
         List<UnitDto> enemiesPosition = new ArrayList<>();
 
-        Battlefield b = battleManagerRepository.getBattlefield();
+        Battlefield b = battleManagerService.getBattlefield();
 
         int width = b.getWidth();
         int length = b.getLength();
@@ -33,7 +36,7 @@ public class Radar {
         for (int y = 0; y < length; y++) {
             for (int x = 0; x < width; x++) {
 
-                UnitDto unit = battleManagerRepository.findUnitByCoordinate(x, y);
+                UnitDto unit = battleManagerService.findUnitByCoordinateAndBattleId(x, y);
 
                 if (unit != null && unit.getIsAlive() && (unit.getUnitType().equals(UnitType.TANK) || unit.getUnitType().equals(UnitType.INFANTRY))) {
                     enemiesPosition.add(unit);

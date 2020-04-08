@@ -1,12 +1,17 @@
-package gun.service.service.systems.loading;
+package gun.service.service.gun.systems.loading;
 
 import gun.service.entity.UnitType;
+import gun.service.service.gun.ammunition.Ammunition;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class AutomationLoadingSystem3000 extends AutomationLoadingSystem {
+
+    public AutomationLoadingSystem3000(Ammunition ammunition) {
+        super(ammunition);
+    }
 
     @Override
     public boolean loadCassette(UnitType unitType) {

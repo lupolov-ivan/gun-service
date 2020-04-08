@@ -11,7 +11,7 @@ spring:
     properties.hibernate.temp.use_jdbc_metadata_defaults: false
     open-in-view: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
 logging:
   level:
     root: info
@@ -19,3 +19,12 @@ uri-builder:
   scheme: http
   host: localhost
   port: 8081
+battle-manager-server:
+  host: localhost
+  port: 8080
+gun-specifications:
+  protection-level: 100
+  quantity-bursting-cassette: 10
+  capacity-bursting-cassette: 10
+  quantity-armor-piercing-cassette: 15
+  capacity-armor-piercing-cassette: 10

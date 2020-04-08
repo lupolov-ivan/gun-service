@@ -1,9 +1,9 @@
-package gun.service.service.systems.fire;
+package gun.service.service.gun.systems.fire;
 
 
 import gun.service.dto.UnitDto;
 import gun.service.exceptions.ShellJammedException;
-import gun.service.service.ammunition.Shell;
+import gun.service.service.gun.ammunition.Shell;
 
 import java.util.Random;
 

@@ -1,4 +1,4 @@
-package gun.service.service.systems.aim;
+package gun.service.service.gun.systems.aim;
 
 import gun.service.dto.UnitDto;
 import gun.service.entity.UnitType;

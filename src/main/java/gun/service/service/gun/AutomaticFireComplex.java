@@ -4,13 +4,14 @@ import gun.service.dto.UnitDamageDto;
 import gun.service.dto.UnitDto;
 import gun.service.entity.Unit;
 import gun.service.entity.UnitType;
-import gun.service.repository.BattleManagerRepository;
-import gun.service.service.systems.Radar;
-import gun.service.service.systems.aim.AimingSystem;
-import gun.service.service.systems.aim.MechanicalInertialAimSystem;
-import gun.service.service.systems.fire.FireSystem;
-import gun.service.service.systems.fire.FireSystem3000;
-import gun.service.service.systems.loading.AutomationLoadingSystem3000;
+import gun.service.service.BattleManagerService;
+import gun.service.service.gun.ammunition.Ammunition;
+import gun.service.service.gun.systems.Radar;
+import gun.service.service.gun.systems.aim.AimingSystem;
+import gun.service.service.gun.systems.aim.MechanicalInertialAimSystem;
+import gun.service.service.gun.systems.fire.FireSystem;
+import gun.service.service.gun.systems.fire.FireSystem3000;
+import gun.service.service.gun.systems.loading.AutomationLoadingSystem3000;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -21,14 +22,14 @@ public class AutomaticFireComplex extends Unit implements Runnable {
     private final AimingSystem aimingSystem;
     private final FireSystem fireSystem;
     private final Radar radar;
-    private final BattleManagerRepository battleManagerRepository;
+    private final BattleManagerService battleManagerService;
 
-    public AutomaticFireComplex(int posX, int posY, int protectionLevel, UnitType unitType, Boolean isAlive, BattleManagerRepository battleManagerRepository) {
+    public AutomaticFireComplex(int posX, int posY, int protectionLevel, UnitType unitType, Boolean isAlive, Ammunition ammunition, BattleManagerService battleManagerService) {
         super(posX, posY, protectionLevel, unitType, isAlive);
-        this.battleManagerRepository = battleManagerRepository;
+        this.battleManagerService = battleManagerService;
         this.aimingSystem = new MechanicalInertialAimSystem(posX, posY);
-        this.fireSystem = new FireSystem3000(new AutomationLoadingSystem3000());
-        this.radar = new Radar(battleManagerRepository);
+        this.fireSystem = new FireSystem3000(new AutomationLoadingSystem3000(ammunition));
+        this.radar = new Radar(battleManagerService);
     }
 
     public void patrol() {
@@ -61,7 +62,7 @@ public class AutomaticFireComplex extends Unit implements Runnable {
             damageDto.setPosY(target.getPosY());
             damageDto.setDamage(aimingSystem.computeAccuracyFactor(target.getUnitType()));
 
-            battleManagerRepository.setUnitDamage(damageDto);
+            battleManagerService.setUnitDamage(damageDto);
         }
     }
 

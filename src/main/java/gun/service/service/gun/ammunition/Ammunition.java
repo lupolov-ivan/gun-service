@@ -1,4 +1,4 @@
-package gun.service.service.ammunition;
+package gun.service.service.gun.ammunition;
 
 import gun.service.entity.UnitType;
 

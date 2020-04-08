@@ -1,4 +1,4 @@
-package gun.service.service.ammunition;
+package gun.service.service.gun.ammunition;
 
 import java.util.ArrayList;
 import java.util.List;
