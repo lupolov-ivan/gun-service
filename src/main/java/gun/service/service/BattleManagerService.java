@@ -15,8 +15,8 @@ public class BattleManagerService {
 
     private Integer battleId;
 
-    public UnitDto findUnitByCoordinateAndBattleId(Integer posX, Integer posY) {
-        return battleManagerRepository.findUnitByCoordinateAndBattleId(posX, posY, battleId);
+    public UnitDto findUnitByCoordinate(Integer posX, Integer posY) {
+        return battleManagerRepository.findUnitByCoordinate(posX, posY, battleId);
     }
 
     public void setUnitDamage(UnitDamageDto damageDto) {

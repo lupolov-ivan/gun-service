@@ -36,7 +36,7 @@ public class Radar {
         for (int y = 0; y < length; y++) {
             for (int x = 0; x < width; x++) {
 
-                UnitDto unit = battleManagerService.findUnitByCoordinateAndBattleId(x, y);
+                UnitDto unit = battleManagerService.findUnitByCoordinate(x, y);
 
                 if (unit != null && unit.getIsAlive() && (unit.getUnitType().equals(UnitType.TANK) || unit.getUnitType().equals(UnitType.INFANTRY))) {
                     enemiesPosition.add(unit);

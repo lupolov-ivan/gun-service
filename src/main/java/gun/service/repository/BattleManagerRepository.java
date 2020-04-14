@@ -23,9 +23,9 @@ public class BattleManagerRepository {
         this.restTemplate = restTemplate;
     }
 
-    public UnitDto findUnitByCoordinateAndBattleId(Integer posX, Integer posY, Integer battleId) {
+    public UnitDto findUnitByCoordinate(Integer posX, Integer posY, Integer battleId) {
 
-        String url = template +"/units/x/"+ posX +"/y/"+ posY +"/battle/"+ battleId;
+        String url = template +"/battles/"+ battleId +"/units/x/"+ posX +"/y/"+ posY;
 
         try {
             ResponseEntity<UnitDto> response = restTemplate.getForEntity(url, UnitDto.class);
@@ -37,7 +37,7 @@ public class BattleManagerRepository {
 
     public void setUnitDamage(UnitDamageDto damageDto, Integer battleId) {
 
-        String url = template +"/units/damage/battle/"+ battleId;
+        String url = template +"/battles/"+ battleId +"/units/damage";
         HttpEntity<UnitDamageDto> request = new HttpEntity<>(damageDto);
 
         restTemplate.patchForObject(url,request, Void.class);
