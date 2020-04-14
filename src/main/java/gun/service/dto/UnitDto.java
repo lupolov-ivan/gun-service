@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class UnitDto {
 
+     private Integer unitId;
      private Integer posX;
      private Integer posY;
      private Integer protectionLevel;

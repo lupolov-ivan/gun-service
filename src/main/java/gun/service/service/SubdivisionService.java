@@ -89,6 +89,7 @@ public class SubdivisionService {
         units.forEach(unit -> {
             UnitDto unitDto = new UnitDto();
 
+            unitDto.setUnitId(unit.getId());
             unitDto.setPosX(unit.getPosX());
             unitDto.setPosY(unit.getPosY());
             unitDto.setProtectionLevel(unit.getProtectionLevel());
