@@ -40,7 +40,7 @@ public class BattleManagerRepository {
         String url = template +"/battles/"+ battleId +"/units/damage";
         HttpEntity<UnitDamageDto> request = new HttpEntity<>(damageDto);
 
-        restTemplate.patchForObject(url,request, Void.class);
+        restTemplate.patchForObject(url, request, Void.class);
     }
 
     public Battlefield getBattlefield() {
