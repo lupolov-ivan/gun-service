@@ -27,23 +27,15 @@ public class Radar {
 
         List<UnitDto> enemiesPosition = new ArrayList<>();
 
-        Battlefield b = battleManagerService.getBattlefield();
-
-        int width = b.getWidth();
-        int length = b.getLength();
-
         log.info("Radar are starting checking battlefield...");
-        for (int y = 0; y < length; y++) {
-            for (int x = 0; x < width; x++) {
 
-                UnitDto unit = battleManagerService.findUnitByCoordinate(x, y);
-
-                if (unit != null && unit.getIsAlive() && (unit.getUnitType().equals(UnitType.TANK) || unit.getUnitType().equals(UnitType.INFANTRY))) {
-                    enemiesPosition.add(unit);
-                    log.info("Detected new enemy: {}", unit);
-                }
+        battleManagerService.getAllUnitsOnTheBattlefield().forEach(unit -> {
+            if (unit != null && unit.getIsAlive() && (unit.getUnitType().equals(UnitType.TANK) || unit.getUnitType().equals(UnitType.INFANTRY))) {
+                enemiesPosition.add(unit);
+                log.info("Detected new enemy: {}", unit);
             }
-        }
+        });
+
         log.info("Radar finish checking battlefield. Enemy count: {}", enemiesPosition.size());
 
         return enemiesPosition;

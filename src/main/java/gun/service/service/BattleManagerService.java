@@ -7,6 +7,8 @@ import gun.service.service.gun.systems.Battlefield;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BattleManagerService {
@@ -15,8 +17,8 @@ public class BattleManagerService {
 
     private Integer battleId;
 
-    public UnitDto findUnitByCoordinate(Integer posX, Integer posY) {
-        return battleManagerRepository.findUnitByCoordinate(posX, posY, battleId);
+    public List<UnitDto> getAllUnitsOnTheBattlefield() {
+        return battleManagerRepository.getAllUnitsOnTheBattlefield(battleId);
     }
 
     public void setUnitDamage(UnitDamageDto damageDto) {

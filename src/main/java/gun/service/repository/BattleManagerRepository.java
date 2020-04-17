@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Repository
 public class BattleManagerRepository {
 
@@ -23,16 +26,12 @@ public class BattleManagerRepository {
         this.restTemplate = restTemplate;
     }
 
-    public UnitDto findUnitByCoordinate(Integer posX, Integer posY, Integer battleId) {
+    public List<UnitDto> getAllUnitsOnTheBattlefield(Integer battleId) {
 
-        String url = template +"/battles/"+ battleId +"/units/x/"+ posX +"/y/"+ posY;
+        String url = template +"/battles/"+ battleId +"/units";
 
-        try {
-            ResponseEntity<UnitDto> response = restTemplate.getForEntity(url, UnitDto.class);
-            return response.getBody();
-        } catch (HttpClientErrorException ignored) { }
-
-        return null;
+        ResponseEntity<UnitDto[]> response = restTemplate.getForEntity(url, UnitDto[].class);
+        return Arrays.asList(response.getBody());
     }
 
     public void setUnitDamage(UnitDamageDto damageDto, Integer battleId) {
