@@ -11,12 +11,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static gun.service.entity.UnitState.ACTIVE;
+import static gun.service.entity.UnitType.INFANTRY;
+import static gun.service.entity.UnitType.TANK;
+
 @Slf4j
 public class Radar {
 
     private final BattleManagerService battleManagerService;
 
-    private Set<UnitType> ignoreTypes;
+    private final Set<UnitType> ignoreTypes;
 
     public Radar(BattleManagerService battleManagerService) {
         this.battleManagerService = battleManagerService;
@@ -30,7 +34,7 @@ public class Radar {
         log.info("Radar are starting checking battlefield...");
 
         battleManagerService.getAllUnitsOnTheBattlefield().forEach(unit -> {
-            if (unit != null && unit.getIsAlive() && (unit.getUnitType().equals(UnitType.TANK) || unit.getUnitType().equals(UnitType.INFANTRY))) {
+            if (unit.getUnitState().equals(ACTIVE) && (unit.getUnitType().equals(TANK) || unit.getUnitType().equals(INFANTRY))) {
                 enemiesPosition.add(unit);
                 log.info("Detected new enemy: {}", unit);
             }

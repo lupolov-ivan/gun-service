@@ -1,5 +1,6 @@
 package gun.service.dto;
 
+import gun.service.entity.UnitState;
 import gun.service.entity.UnitType;
 import lombok.Data;
 
@@ -11,5 +12,5 @@ public class UnitDto {
      private Integer posY;
      private Integer protectionLevel;
      private UnitType unitType;
-     private Boolean isAlive;
+     private UnitState unitState;
 }

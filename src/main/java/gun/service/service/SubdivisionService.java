@@ -51,11 +51,12 @@ public class SubdivisionService {
 
         units.forEach(unit -> {
             AutomaticFireComplex afc = new AutomaticFireComplex(
+                    unit.getId(),
                     unit.getPosX(),
                     unit.getPosY(),
                     unit.getProtectionLevel(),
                     unit.getUnitType(),
-                    unit.getIsAlive(),
+                    unit.getUnitState(),
                     Ammunition.createAmmunition(quantityBurstingCassette, capacityBurstingCassette, quantityArmorPiercingCassette, capacityArmorPiercingCassette),
                     battleManagerService
             );
@@ -94,7 +95,7 @@ public class SubdivisionService {
             unitDto.setPosY(unit.getPosY());
             unitDto.setProtectionLevel(unit.getProtectionLevel());
             unitDto.setUnitType(unit.getUnitType());
-            unitDto.setIsAlive(unit.getIsAlive());
+            unitDto.setUnitType(unit.getUnitType());
 
             unitDtoList.add(unitDto);
         });

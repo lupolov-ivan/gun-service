@@ -1,5 +1,6 @@
 package gun.service.repository;
 
+import gun.service.dto.SetUnitStateDto;
 import gun.service.dto.UnitDamageDto;
 import gun.service.dto.UnitDto;
 import gun.service.service.gun.systems.Battlefield;
@@ -42,10 +43,11 @@ public class BattleManagerRepository {
         restTemplate.patchForObject(url, request, Void.class);
     }
 
-    public Battlefield getBattlefield() {
+    public void updateUnitState(SetUnitStateDto dto, Integer battleId) {
 
-        String url = template +"/battlefield/info";
+        String url = template +"/battles/"+ battleId +"/units/state/update";
+        HttpEntity<SetUnitStateDto> request = new HttpEntity<>(dto);
 
-        return restTemplate.getForObject(url, Battlefield.class);
+        restTemplate.patchForObject(url, request, Void.class);
     }
 }
