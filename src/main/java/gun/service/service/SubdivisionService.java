@@ -58,7 +58,8 @@ public class SubdivisionService {
                     unit.getUnitType(),
                     unit.getUnitState(),
                     Ammunition.createAmmunition(quantityBurstingCassette, capacityBurstingCassette, quantityArmorPiercingCassette, capacityArmorPiercingCassette),
-                    battleManagerService
+                    battleManagerService,
+                    unitService
             );
             new Thread(afc).start();
             log.info("New AFC({}) start patrolling", afc);
@@ -95,7 +96,7 @@ public class SubdivisionService {
             unitDto.setPosY(unit.getPosY());
             unitDto.setProtectionLevel(unit.getProtectionLevel());
             unitDto.setUnitType(unit.getUnitType());
-            unitDto.setUnitType(unit.getUnitType());
+            unitDto.setUnitState(unit.getUnitState());
 
             unitDtoList.add(unitDto);
         });
