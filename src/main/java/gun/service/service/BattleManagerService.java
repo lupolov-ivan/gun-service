@@ -3,6 +3,8 @@ package gun.service.service;
 import gun.service.dto.SetUnitStateDto;
 import gun.service.dto.UnitDamageDto;
 import gun.service.dto.UnitDto;
+import gun.service.dto.WinnerDto;
+import gun.service.entity.UnitType;
 import gun.service.repository.BattleManagerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,5 +33,9 @@ public class BattleManagerService {
 
     public void setBattleId(Integer battleId) {
         this.battleId = battleId;
+    }
+
+    public void stopBattle(WinnerDto winner) {
+        battleManagerRepository.stopBattle(battleId, winner);
     }
 }

@@ -3,6 +3,8 @@ package gun.service.repository;
 import gun.service.dto.SetUnitStateDto;
 import gun.service.dto.UnitDamageDto;
 import gun.service.dto.UnitDto;
+import gun.service.dto.WinnerDto;
+import gun.service.entity.UnitType;
 import gun.service.service.gun.systems.Battlefield;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -49,5 +51,14 @@ public class BattleManagerRepository {
         HttpEntity<SetUnitStateDto> request = new HttpEntity<>(dto);
 
         restTemplate.patchForObject(url, request, Void.class);
+    }
+
+    public void stopBattle(Integer battleId, WinnerDto winner) {
+
+        String url = template + "/battles/" + battleId + "/stop";
+
+        HttpEntity<WinnerDto> request = new HttpEntity<>(winner);
+
+        restTemplate.postForObject(url, request, Void.class);
     }
 }

@@ -28,9 +28,9 @@ public class SubdivisionController {
                 .build();
     }
 
-    @GetMapping("{id}/guns")
-    public ResponseEntity<List<UnitDto>> getSubdivisionUnitsById(@PathVariable Integer id) {
-        return ResponseEntity.ok(subdivisionService.getSubdivisionUnitsById(id));
+    @GetMapping("{subdivisionId}/guns")
+    public ResponseEntity<List<UnitDto>> getSubdivisionUnitsById(@PathVariable Integer subdivisionId) {
+        return ResponseEntity.ok(subdivisionService.getSubdivisionUnitsById(subdivisionId));
     }
 
     @PatchMapping("{subdivisionId}/units/{unitId}/add")
@@ -43,6 +43,13 @@ public class SubdivisionController {
     @PatchMapping("/units/{unitId}/remove")
     public ResponseEntity<?> removeUnitToSubdivisions(@PathVariable Integer unitId) {
         subdivisionService.removeUnitFromSubdivisions(unitId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{subdivisionId}/units/state/dead")
+    public ResponseEntity<?> setStateUnitsDeadBySubdivisionId(@PathVariable Integer subdivisionId) {
+        subdivisionService.setStateUnitsDeadBySubdivisionId(subdivisionId);
 
         return ResponseEntity.noContent().build();
     }

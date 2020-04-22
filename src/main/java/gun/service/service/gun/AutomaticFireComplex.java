@@ -3,6 +3,7 @@ package gun.service.service.gun;
 import gun.service.dto.SetUnitStateDto;
 import gun.service.dto.UnitDamageDto;
 import gun.service.dto.UnitDto;
+import gun.service.dto.WinnerDto;
 import gun.service.entity.Unit;
 import gun.service.entity.UnitState;
 import gun.service.entity.UnitType;
@@ -20,8 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
-import static gun.service.entity.UnitState.NO_ENEMIES;
-import static gun.service.entity.UnitState.NO_SHELLS;
+import static gun.service.entity.UnitState.*;
 
 @Slf4j
 public class AutomaticFireComplex extends Unit implements Runnable {
@@ -45,16 +45,28 @@ public class AutomaticFireComplex extends Unit implements Runnable {
     public void patrol() {
         while (true) {
 
+            Unit guns = unitService.findById(this.getId()).orElseThrow(NotFoundException::new);
+
+            if (guns.getUnitState().equals(DEAD)) {
+                log.info("Stop fire, unit is destroyed");
+                break;
+            }
+
             List<UnitDto> lastPosition = radar.checkField();
 
             if (lastPosition.size() == 0) {
                 if(radar.getSizeIgnoreList() > 0) {
                     log.info("No shells of the required type to destroy remaining targets. Stopping fire...");
-                    saveAndUpdateState(NO_SHELLS);
+                    saveAndUpdateState(guns, NO_SHELLS);
                     break;
                 }
                 log.info("There is no enemies to destroy. Stopping fire...");
-                saveAndUpdateState(NO_ENEMIES);
+                saveAndUpdateState(guns, NO_ENEMIES);
+                unitService.addUnitsGunsWithStateNoEnemies();
+                if (canStopBattle()) {
+                    battleManagerService.stopBattle(new WinnerDto(guns.getUnitType()));
+                    log.info("GUN SERVICE CALL STOP BATTLE");
+                }
                 break;
             }
 
@@ -72,16 +84,14 @@ public class AutomaticFireComplex extends Unit implements Runnable {
         }
     }
 
-    private void saveAndUpdateState(UnitState state) {
+    private void saveAndUpdateState(Unit unit, UnitState state) {
 
-        Unit maybeUnit = unitService.findById(this.getId()).orElseThrow(NotFoundException::new);
-
-        maybeUnit.setUnitState(state);
-        unitService.saveUnit(maybeUnit);
+        unit.setUnitState(state);
+        unitService.saveUnit(unit);
 
         SetUnitStateDto dto = new SetUnitStateDto();
-        dto.setUnitId(maybeUnit.getId());
-        dto.setUnitType(maybeUnit.getUnitType());
+        dto.setUnitId(unit.getId());
+        dto.setUnitType(unit.getUnitType());
         dto.setUnitState(state);
         battleManagerService.updateUnitState(dto);
     }
@@ -94,6 +104,12 @@ public class AutomaticFireComplex extends Unit implements Runnable {
         damageDto.setDamage(aimingSystem.computeAccuracyFactor(target.getUnitType()));
 
         battleManagerService.setUnitDamage(damageDto);
+    }
+
+    private boolean canStopBattle() {
+        int size = unitService.getUnitsBySubdivisionId(this.getSubdivisionId()).size();
+        int quantityGunsWithStateNoEnemies = unitService.getQuantityGunsWithStateNoEnemies();
+        return size == quantityGunsWithStateNoEnemies;
     }
 
     @Override

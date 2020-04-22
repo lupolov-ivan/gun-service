@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
 public class UnitService {
 
     private final UnitRepository unitRepository;
+    private final AtomicInteger quantityGunsWithStateNoEnemies = new AtomicInteger(0);
 
     public Unit saveUnit(Unit unit) {
         return unitRepository.save(unit);
@@ -38,5 +40,13 @@ public class UnitService {
 
     public Optional<Unit> findById(Integer id) {
         return unitRepository.findById(id);
+    }
+
+    public Integer getQuantityGunsWithStateNoEnemies() {
+        return quantityGunsWithStateNoEnemies.get();
+    }
+
+    public void addUnitsGunsWithStateNoEnemies() {
+        quantityGunsWithStateNoEnemies.incrementAndGet();
     }
 }

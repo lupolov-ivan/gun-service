@@ -3,6 +3,7 @@ package gun.service.service;
 import gun.service.dto.UnitDto;
 import gun.service.entity.Subdivision;
 import gun.service.entity.Unit;
+import gun.service.entity.UnitState;
 import gun.service.exceptions.NotFoundException;
 import gun.service.repository.SubdivisionRepository;
 import gun.service.service.gun.AutomaticFireComplex;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static gun.service.entity.UnitState.DEAD;
 
 @Service
 @RequiredArgsConstructor
@@ -44,9 +47,9 @@ public class SubdivisionService {
         subdivisionRepository.deleteById(id);
     }
 
-    public void startPatrolling(Integer id, Integer battleId) {
+    public void startPatrolling(Integer subdivisionId, Integer battleId) {
 
-        List<Unit> units = unitService.getUnitsBySubdivisionId(id);
+        List<Unit> units = unitService.getUnitsBySubdivisionId(subdivisionId);
         battleManagerService.setBattleId(battleId);
 
         units.forEach(unit -> {
@@ -82,6 +85,15 @@ public class SubdivisionService {
 
         maybeUnit.setSubdivisionId(null);
         unitService.saveUnit(maybeUnit);
+    }
+
+    public void setStateUnitsDeadBySubdivisionId(Integer subdivisionId) {
+        subdivisionRepository.findById(subdivisionId).orElseThrow(NotFoundException::new);
+
+        List<Unit> units = unitService.getUnitsBySubdivisionId(subdivisionId);
+        units.forEach(unit -> unit.setUnitState(DEAD));
+        unitService.saveAllUnit(units);
+        log.info("All guns get state DEAD");
     }
 
     public List<UnitDto> getSubdivisionUnitsById(Integer id) {
