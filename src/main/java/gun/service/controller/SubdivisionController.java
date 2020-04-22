@@ -28,7 +28,7 @@ public class SubdivisionController {
                 .build();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}/guns")
     public ResponseEntity<List<UnitDto>> getSubdivisionUnitsById(@PathVariable Integer id) {
         return ResponseEntity.ok(subdivisionService.getSubdivisionUnitsById(id));
     }
