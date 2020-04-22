@@ -4,5 +4,6 @@ public enum UnitState {
     ACTIVE,
     NO_SHELLS,
     NO_ENEMIES,
-    DEAD
+    DEAD,
+    CRITICAL_DISTANCE_REACHED
 }

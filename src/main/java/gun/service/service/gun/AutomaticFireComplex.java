@@ -52,6 +52,11 @@ public class AutomaticFireComplex extends Unit implements Runnable {
                 break;
             }
 
+            if(guns.getUnitState().equals(NO_ENEMIES)) {
+                log.info("There is no enemies to destroy. Stopping fire...");
+                break;
+            }
+
             List<UnitDto> lastPosition = radar.checkField();
 
             if (lastPosition.size() == 0) {
@@ -62,11 +67,9 @@ public class AutomaticFireComplex extends Unit implements Runnable {
                 }
                 log.info("There is no enemies to destroy. Stopping fire...");
                 saveAndUpdateState(guns, NO_ENEMIES);
-                unitService.addUnitsGunsWithStateNoEnemies();
-                if (canStopBattle()) {
-                    battleManagerService.stopBattle(new WinnerDto(guns.getUnitType()));
-                    log.info("GUN SERVICE CALL STOP BATTLE");
-                }
+                unitService.setGunsStatusNoEnemies(guns.getSubdivisionId());
+                battleManagerService.stopBattle(new WinnerDto(guns.getUnitType()));
+                log.info("GUN SERVICE CALL STOP BATTLE");
                 break;
             }
 
@@ -86,6 +89,7 @@ public class AutomaticFireComplex extends Unit implements Runnable {
 
     private void saveAndUpdateState(Unit unit, UnitState state) {
 
+        this.setUnitState(state);
         unit.setUnitState(state);
         unitService.saveUnit(unit);
 
@@ -104,12 +108,6 @@ public class AutomaticFireComplex extends Unit implements Runnable {
         damageDto.setDamage(aimingSystem.computeAccuracyFactor(target.getUnitType()));
 
         battleManagerService.setUnitDamage(damageDto);
-    }
-
-    private boolean canStopBattle() {
-        int size = unitService.getUnitsBySubdivisionId(this.getSubdivisionId()).size();
-        int quantityGunsWithStateNoEnemies = unitService.getQuantityGunsWithStateNoEnemies();
-        return size == quantityGunsWithStateNoEnemies;
     }
 
     @Override
