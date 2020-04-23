@@ -1,6 +1,6 @@
 package gun.service.service.gun;
 
-import gun.service.dto.SetUnitStateDto;
+import gun.service.dto.UnitStateDto;
 import gun.service.dto.UnitDamageDto;
 import gun.service.dto.UnitDto;
 import gun.service.dto.WinnerDto;
@@ -93,7 +93,7 @@ public class AutomaticFireComplex extends Unit implements Runnable {
         unit.setUnitState(state);
         unitService.saveUnit(unit);
 
-        SetUnitStateDto dto = new SetUnitStateDto();
+        UnitStateDto dto = new UnitStateDto();
         dto.setUnitId(unit.getId());
         dto.setUnitType(unit.getUnitType());
         dto.setUnitState(state);

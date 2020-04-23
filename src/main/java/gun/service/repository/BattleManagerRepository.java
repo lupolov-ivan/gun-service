@@ -1,16 +1,13 @@
 package gun.service.repository;
 
-import gun.service.dto.SetUnitStateDto;
+import gun.service.dto.UnitStateDto;
 import gun.service.dto.UnitDamageDto;
 import gun.service.dto.UnitDto;
 import gun.service.dto.WinnerDto;
-import gun.service.entity.UnitType;
-import gun.service.service.gun.systems.Battlefield;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -45,10 +42,10 @@ public class BattleManagerRepository {
         restTemplate.patchForObject(url, request, Void.class);
     }
 
-    public void updateUnitState(SetUnitStateDto dto, Integer battleId) {
+    public void updateUnitState(UnitStateDto dto, Integer battleId) {
 
         String url = template +"/battles/"+ battleId +"/units/state/update";
-        HttpEntity<SetUnitStateDto> request = new HttpEntity<>(dto);
+        HttpEntity<UnitStateDto> request = new HttpEntity<>(dto);
 
         restTemplate.patchForObject(url, request, Void.class);
     }

@@ -5,7 +5,7 @@ import gun.service.entity.UnitType;
 import lombok.Data;
 
 @Data
-public class SetUnitStateDto {
+public class UnitStateDto {
 
     private Integer unitId;
     private UnitType unitType;

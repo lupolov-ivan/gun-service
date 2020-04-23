@@ -40,11 +40,11 @@ public class SubdivisionService {
         return subdivisionRepository.save(subdivision);
     }
 
-    public void deleteSubdivision(Integer id) {
-        List<Unit> units = unitService.getUnitsBySubdivisionId(id);
+    public void deleteSubdivision(Integer subdivisionId) {
+        List<Unit> units = unitService.getUnitsBySubdivisionId(subdivisionId);
         units.forEach(unit -> unit.setSubdivisionId(null));
         unitService.saveAllUnit(units);
-        subdivisionRepository.deleteById(id);
+        subdivisionRepository.deleteById(subdivisionId);
     }
 
     public void startPatrolling(Integer subdivisionId, Integer battleId) {
@@ -114,5 +114,9 @@ public class SubdivisionService {
         });
 
         return unitDtoList;
+    }
+
+    public Subdivision getSubdivisionById(Integer subdivisionId) {
+        return subdivisionRepository.findById(subdivisionId).orElseThrow(NotFoundException::new);
     }
 }

@@ -1,7 +1,6 @@
 package gun.service.service;
 
 import gun.service.entity.Unit;
-import gun.service.entity.UnitState;
 import gun.service.exceptions.NotFoundException;
 import gun.service.repository.UnitRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static gun.service.entity.UnitState.NO_ENEMIES;
 
@@ -41,12 +39,12 @@ public class UnitService {
         saveAllUnit(units);
     }
 
-    public void removeUnitById(Integer id) {
-        unitRepository.findById(id).orElseThrow(NotFoundException::new);
-        unitRepository.deleteById(id);
+    public void removeUnitById(Integer unitId) {
+        unitRepository.findById(unitId).orElseThrow(NotFoundException::new);
+        unitRepository.deleteById(unitId);
     }
 
-    public Optional<Unit> findById(Integer id) {
-        return unitRepository.findById(id);
+    public Optional<Unit> findById(Integer unitId) {
+        return unitRepository.findById(unitId);
     }
 }

@@ -1,10 +1,9 @@
 package gun.service.service;
 
-import gun.service.dto.SetUnitStateDto;
+import gun.service.dto.UnitStateDto;
 import gun.service.dto.UnitDamageDto;
 import gun.service.dto.UnitDto;
 import gun.service.dto.WinnerDto;
-import gun.service.entity.UnitType;
 import gun.service.repository.BattleManagerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,7 @@ public class BattleManagerService {
         battleManagerRepository.setUnitDamage(damageDto, battleId);
     }
 
-    public void updateUnitState(SetUnitStateDto dto) {
+    public void updateUnitState(UnitStateDto dto) {
         battleManagerRepository.updateUnitState(dto, battleId);
     }
 

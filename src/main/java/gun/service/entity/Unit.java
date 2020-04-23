@@ -1,5 +1,6 @@
 package gun.service.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Unit {
 
     @Id
