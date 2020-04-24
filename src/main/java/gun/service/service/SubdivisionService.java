@@ -41,6 +41,8 @@ public class SubdivisionService {
     }
 
     public void deleteSubdivision(Integer subdivisionId) {
+        subdivisionRepository.findById(subdivisionId).orElseThrow(NotFoundException::new);
+
         List<Unit> units = unitService.getUnitsBySubdivisionId(subdivisionId);
         units.forEach(unit -> unit.setSubdivisionId(null));
         unitService.saveAllUnit(units);
@@ -65,7 +67,7 @@ public class SubdivisionService {
                     unitService
             );
             new Thread(afc).start();
-            log.info("New AFC({}) start patrolling", afc);
+            log.debug("New AFC({}) start patrolling", afc);
         });
     }
 
@@ -93,7 +95,7 @@ public class SubdivisionService {
         List<Unit> units = unitService.getUnitsBySubdivisionId(subdivisionId);
         units.forEach(unit -> unit.setUnitState(DEAD));
         unitService.saveAllUnit(units);
-        log.info("All guns get state DEAD");
+        log.debug("All guns get state DEAD");
     }
 
     public List<UnitDto> getSubdivisionUnitsById(Integer id) {

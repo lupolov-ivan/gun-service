@@ -14,6 +14,7 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/subdivisions")
@@ -56,7 +57,7 @@ public class SubdivisionController {
     }
 
     @PatchMapping("/units/{unitId}/remove")
-    public ResponseEntity<?> removeUnitToSubdivisions(@PathVariable Integer unitId) {
+    public ResponseEntity<?> removeUnitFromSubdivisions(@PathVariable Integer unitId) {
         subdivisionService.removeUnitFromSubdivisions(unitId);
 
         return ResponseEntity.noContent().build();

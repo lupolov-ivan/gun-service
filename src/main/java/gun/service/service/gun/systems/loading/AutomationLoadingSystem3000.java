@@ -28,10 +28,10 @@ public class AutomationLoadingSystem3000 extends AutomationLoadingSystem {
 
             currentCassette = ammunition.getCassette(unitType);
             currentEnemyTypeCassette = unitType;
-            log.info("Next cassette received");
+            log.debug("Next cassette received");
             return true;
         } else {
-            log.info("Shells for target with type '{}' is over.", unitType);
+            log.debug("Shells for target with type '{}' is over.", unitType);
             return false;
         }
     }

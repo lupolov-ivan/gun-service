@@ -29,7 +29,7 @@ public class FireSystem3000 extends FireSystem {
         try {
             isJammed();
         } catch (ShellJammedException e) {
-            log.info("Shell is Jammed. Extracting shell...");
+            log.debug("Shell is Jammed. Extracting shell...");
             loadingSystem.extractShell();
         }
 

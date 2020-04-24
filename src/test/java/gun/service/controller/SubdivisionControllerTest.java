@@ -1,13 +1,12 @@
 package gun.service.controller;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import gun.service.entity.Subdivision;
 import gun.service.entity.Unit;
+import gun.service.entity.UnitState;
 import gun.service.repository.SubdivisionRepository;
 import gun.service.repository.UnitRepository;
 import gun.service.utils.TestUtils;
 import org.junit.After;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +17,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-
 import static gun.service.entity.UnitState.ACTIVE;
 import static gun.service.entity.UnitType.AFC;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -39,9 +39,6 @@ public class SubdivisionControllerTest {
     UnitRepository unitRepository;
     @Autowired
     SubdivisionRepository subdivisionRepository;
-
-    @Rule
-    public WireMockRule wireMockRuleForEnemy = new WireMockRule(8089);
 
     @After
     public void cleanUp() {
@@ -142,11 +139,84 @@ public class SubdivisionControllerTest {
     }
 
     @Test
-    public void whenAddNotExistUnitToSubdivisionById_ThenReturn404Status() throws Exception {
+    public void whenAddNotExistUnitToSubdivision_ThenReturn404Status() throws Exception {
 
         int subdivisionId = subdivisionRepository.save(new Subdivision(null, "ALPHA")).getId();
 
         mockMvc.perform(patch("/subdivisions/{subdivisionId}/units/{unitId}/add", subdivisionId, 666))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void whenRemoveExistUnitFromSubdivision_ThenUnitDeleteAndReturn204Status() throws Exception {
+
+        int subdivisionId = subdivisionRepository.save(new Subdivision(null, "ALPHA")).getId();
+        int unitId =  unitRepository.save(new Unit(null, 2, 4, 100, AFC, ACTIVE, subdivisionId)).getId();
+
+        mockMvc.perform(patch("/subdivisions/units/{unitId}/remove", unitId))
+                .andExpect(status().isNoContent());
+
+        int quantityUnits = unitRepository.findUnitsBySubdivisionId(subdivisionId).size();
+        Unit unit = unitRepository.findById(unitId).get();
+
+        assertEquals(0, quantityUnits);
+        assertNull(unit.getSubdivisionId());
+    }
+
+    @Test
+    public void whenRemoveNotExistUnitFromSubdivision_ThenReturn404Status() throws Exception {
+
+        mockMvc.perform(patch("/subdivisions/units/{unitId}/remove", 666))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void whenSetUnitsDeadState_ThenAllUnitsGetDeadStateAndReturn204Status() throws Exception {
+
+        int subdivisionId = subdivisionRepository.save(new Subdivision(null, "ALPHA")).getId();
+        int unitId1 =  unitRepository.save(new Unit(null, 2, 4, 100, AFC, ACTIVE, subdivisionId)).getId();
+        int unitId2 =  unitRepository.save(new Unit(null, 3, 5, 100, AFC, ACTIVE, subdivisionId)).getId();
+
+        mockMvc.perform(patch("/subdivisions/{subdivisionId}/units/state/dead", subdivisionId))
+                .andExpect(status().isNoContent());
+
+        Unit unit1 = unitRepository.findById(unitId1).get();
+        Unit unit2 = unitRepository.findById(unitId2).get();
+
+        assertEquals(UnitState.DEAD, unit1.getUnitState());
+        assertEquals(UnitState.DEAD, unit2.getUnitState());
+    }
+
+    @Test
+    public void whenSetUnitsDeadStateInNotExistSubdivision_ThenReturn404Status() throws Exception {
+
+        mockMvc.perform(patch("/subdivisions//{subdivisionId}/units/state/dead", 666))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void whenDeleteSubdivision_ThenAllUnitsSetNullSubdivisionIdAndReturn204Status() throws Exception {
+
+        int subdivisionId = subdivisionRepository.save(new Subdivision(null, "ALPHA")).getId();
+        int unitId1 =  unitRepository.save(new Unit(null, 2, 4, 100, AFC, ACTIVE, subdivisionId)).getId();
+        int unitId2 =  unitRepository.save(new Unit(null, 3, 5, 100, AFC, ACTIVE, subdivisionId)).getId();
+
+        mockMvc.perform(delete("/subdivisions/{subdivisionId}", subdivisionId))
+                .andExpect(status().isNoContent());
+
+        Unit unit1 = unitRepository.findById(unitId1).get();
+        Unit unit2 = unitRepository.findById(unitId2).get();
+
+        assertNull(unit1.getSubdivisionId());
+        assertNull(unit2.getSubdivisionId());
+    }
+
+    @Test
+    public void whenDeleteNotExistSubdivision_ThenReturn404Status() throws Exception {
+
+        mockMvc.perform(delete("/subdivisions/{subdivisionId}", 666))
+                .andExpect(status().isNotFound());
+    }
+
+
 }

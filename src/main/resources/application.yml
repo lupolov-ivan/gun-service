@@ -13,8 +13,9 @@ spring:
     hibernate:
       ddl-auto: validate
 logging:
-  level:
-    root: info
+    level:
+      gun.service.service: debug
+      root: info
 battle-service-server:
   host: localhost
   port: 8080

@@ -48,12 +48,12 @@ public class AutomaticFireComplex extends Unit implements Runnable {
             Unit guns = unitService.findById(this.getId()).orElseThrow(NotFoundException::new);
 
             if (guns.getUnitState().equals(DEAD)) {
-                log.info("Stop fire, unit is destroyed");
+                log.debug("Stop fire, unit is destroyed");
                 break;
             }
 
             if(guns.getUnitState().equals(NO_ENEMIES)) {
-                log.info("There is no enemies to destroy. Stopping fire...");
+                log.debug("There is no enemies to destroy. Stopping fire...");
                 break;
             }
 
@@ -61,15 +61,15 @@ public class AutomaticFireComplex extends Unit implements Runnable {
 
             if (lastPosition.size() == 0) {
                 if(radar.getSizeIgnoreList() > 0) {
-                    log.info("No shells of the required type to destroy remaining targets. Stopping fire...");
+                    log.debug("No shells of the required type to destroy remaining targets. Stopping fire...");
                     saveAndUpdateState(guns, NO_SHELLS);
                     break;
                 }
-                log.info("There is no enemies to destroy. Stopping fire...");
+                log.debug("There is no enemies to destroy. Stopping fire...");
                 saveAndUpdateState(guns, NO_ENEMIES);
                 unitService.setGunsStatusNoEnemies(guns.getSubdivisionId());
                 battleManagerService.stopBattle(new WinnerDto(guns.getUnitType()));
-                log.info("GUN SERVICE CALL STOP BATTLE");
+                log.debug("GUN SERVICE CALL STOP BATTLE");
                 break;
             }
 
@@ -77,11 +77,11 @@ public class AutomaticFireComplex extends Unit implements Runnable {
 
             if(!fireSystem.makeShot(target)) {
                 radar.addTypeToIgnore(target.getUnitType());
-                log.info("No shells for {}", target.getUnitType().name());
+                log.debug("No shells for {}", target.getUnitType().name());
                 continue;
             }
 
-            log.info("AFC '{}' shot to target '{}'", this, target);
+            log.debug("AFC '{}' shot to target '{}'", this, target);
 
             setDamage(target);
         }

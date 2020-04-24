@@ -27,13 +27,13 @@ public class MechanicalInertialAimSystem extends AimingSystem {
         int currentMinDistance = abs(posX - closestTarget.getPosX()) + abs(posY - closestTarget.getPosY());
 
         if(enemies.size() == 1) {
-            log.info("Catch last target: {}", closestTarget);
+            log.debug("Catch last target: {}", closestTarget);
 
             if(closestTarget.equals(lastTarget)) {
-                log.info("Target caught is the same");
+                log.debug("Target caught is the same");
                 countShotSameTarget++;
             } else {
-                log.info("Target caught is new");
+                log.debug("Target caught is new");
                 countShotSameTarget = 1;
             }
             lastTarget = closestTarget;
@@ -58,14 +58,14 @@ public class MechanicalInertialAimSystem extends AimingSystem {
             }
         }
 
-        log.info("Catch new target: {}", closestTarget);
+        log.debug("Catch new target: {}", closestTarget);
 
         if(closestTarget.equals(lastTarget)) {
-            log.info("Target caught is the same");
+            log.debug("Target caught is the same");
             lastTarget = closestTarget;
             countShotSameTarget++;
         } else {
-            log.info("Target caught is new");
+            log.debug("Target caught is new");
             lastTarget = closestTarget;
             countShotSameTarget = 1;
         }

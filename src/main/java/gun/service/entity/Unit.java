@@ -21,13 +21,10 @@ public class Unit {
     private Integer posX;
     private Integer posY;
     private Integer protectionLevel;
-
     @Enumerated(STRING)
     private UnitType unitType;
-
     @Enumerated(STRING)
     private UnitState unitState;
-
     private Integer subdivisionId;
 
     public Unit(Integer id, Integer posX, Integer posY, Integer protectionLevel, UnitType unitType, UnitState unitState) {
