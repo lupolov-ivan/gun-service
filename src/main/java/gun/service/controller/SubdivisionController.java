@@ -1,5 +1,6 @@
 package gun.service.controller;
 
+import gun.service.dto.CreateSubdivisionDto;
 import gun.service.dto.UnitDto;
 import gun.service.entity.Subdivision;
 import gun.service.exceptions.NotFoundException;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -29,10 +31,20 @@ public class SubdivisionController {
 
     private final SubdivisionService subdivisionService;
 
-    @PostMapping
-    public ResponseEntity<Subdivision> createSubdivision(@RequestBody Subdivision subdivision) {
+    @PostMapping("/empty")
+    public ResponseEntity<Subdivision> createEmptySubdivision(@RequestBody Subdivision subdivision) {
 
-        subdivisionService.createSubdivision(subdivision);
+        subdivisionService.createEmptySubdivision(subdivision);
+
+        return ResponseEntity
+                .created(createUriBuilder("/subdivisions/{id}").build(subdivision.getId()))
+                .build();
+    }
+
+    @PostMapping("/filled")
+    public ResponseEntity<Subdivision> createFilledSubdivision(@RequestBody CreateSubdivisionDto createSubdivisionDto) {
+
+        Subdivision subdivision = subdivisionService.createFilledSubdivision(createSubdivisionDto);
 
         return ResponseEntity
                 .created(createUriBuilder("/subdivisions/{id}").build(subdivision.getId()))

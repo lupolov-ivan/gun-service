@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class AutomationLoadingSystem3000 extends AutomationLoadingSystem {
 
-    public AutomationLoadingSystem3000(Ammunition ammunition) {
-        super(ammunition);
+    public AutomationLoadingSystem3000(Integer loadTime, Integer disconnectTime, Ammunition ammunition) {
+        super(loadTime, disconnectTime, ammunition);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class AutomationLoadingSystem3000 extends AutomationLoadingSystem {
 
         if (ammunition.hasNext(unitType)) {
             try {
-                TimeUnit.SECONDS.sleep(3);
+                TimeUnit.SECONDS.sleep(loadTime);
             } catch (InterruptedException ignored) {
             }
 
@@ -46,7 +46,7 @@ public class AutomationLoadingSystem3000 extends AutomationLoadingSystem {
             ammunition.addCassette(currentCassette);
         }
         try {
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(disconnectTime);
         } catch (InterruptedException ignored) {
         }
 
@@ -58,8 +58,7 @@ public class AutomationLoadingSystem3000 extends AutomationLoadingSystem {
     public void extractShell() {
         try {
             TimeUnit.SECONDS.sleep(10);
-        } catch (InterruptedException ignored) {
-        }
+        } catch (InterruptedException ignored) { }
     }
 }
 

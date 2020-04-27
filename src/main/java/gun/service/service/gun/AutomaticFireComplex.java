@@ -32,14 +32,13 @@ public class AutomaticFireComplex extends Unit implements Runnable {
     private final BattleManagerService battleManagerService;
     private final UnitService unitService;
 
-    public AutomaticFireComplex(Integer id, Integer posX, Integer posY, Integer protectionLevel, UnitType unitType, UnitState unitState, Ammunition ammunition, BattleManagerService battleManagerService, UnitService unitService) {
+    public AutomaticFireComplex(Integer id, Integer posX, Integer posY, Integer protectionLevel, UnitType unitType, UnitState unitState, Integer shotPeriod, Integer loadCassetteTime, Integer disconnectCassetteTime, Ammunition ammunition, BattleManagerService battleManagerService, UnitService unitService) {
         super(id, posX, posY, protectionLevel, unitType, unitState);
         this.battleManagerService = battleManagerService;
         this.aimingSystem = new MechanicalInertialAimSystem(posX, posY);
-        this.fireSystem = new FireSystem3000(new AutomationLoadingSystem3000(ammunition));
+        this.fireSystem = new FireSystem3000(new AutomationLoadingSystem3000(loadCassetteTime, disconnectCassetteTime, ammunition), shotPeriod);
         this.radar = new Radar(battleManagerService);
         this.unitService = unitService;
-
     }
 
     public void patrol() {

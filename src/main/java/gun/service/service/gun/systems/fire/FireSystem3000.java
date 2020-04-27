@@ -12,8 +12,8 @@ public class FireSystem3000 extends FireSystem {
 
     private AutomationLoadingSystem loadingSystem;
 
-    public FireSystem3000(AutomationLoadingSystem loadingSystem) {
-        shotPeriod = 1;
+    public FireSystem3000(AutomationLoadingSystem loadingSystem, Integer shotPeriod) {
+        this.shotPeriod = shotPeriod;
         this.loadingSystem = loadingSystem;
     }
 
@@ -34,17 +34,11 @@ public class FireSystem3000 extends FireSystem {
         }
 
         currentShell = loadingSystem.getCurrentCassette().getShell();
-        //unitDto.setDamage(currentShell.getDamageEnergy() * unitDto.getAccuracyFactor());
 
         try {
             TimeUnit.SECONDS.sleep(shotPeriod);
         } catch (InterruptedException ignored) {
         }
         return true;
-    }
-
-    @Override
-    public void noMoreEnemies(){
-        loadingSystem.disconnectCassette();
     }
 }

@@ -1,10 +1,13 @@
 package gun.service.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -13,6 +16,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Unit {
 
     @Id
@@ -26,6 +30,15 @@ public class Unit {
     @Enumerated(STRING)
     private UnitState unitState;
     private Integer subdivisionId;
+
+    private Integer loadCassetteTime;
+    private Integer disconnectCassetteTime;
+    private Integer shotPeriod;
+
+    private Integer quantityBurstingCassette;
+    private Integer capacityBurstingCassette;
+    private Integer quantityArmorPiercingCassette;
+    private Integer capacityArmorPiercingCassette;
 
     public Unit(Integer id, Integer posX, Integer posY, Integer protectionLevel, UnitType unitType, UnitState unitState) {
         this.id = id;

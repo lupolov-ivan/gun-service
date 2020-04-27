@@ -21,10 +21,4 @@ public abstract class FireSystem {
             throw new ShellJammedException("Shell is Jammed");
         }
     }
-
-    public int getShotPeriod() {
-        return shotPeriod;
-    }
-
-    public void noMoreEnemies() {}
 }

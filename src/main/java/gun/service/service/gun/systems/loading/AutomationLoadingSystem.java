@@ -7,11 +7,15 @@ import gun.service.service.gun.ammunition.Cassette;
 
 public abstract class AutomationLoadingSystem {
 
+    protected Integer loadTime;
+    protected Integer disconnectTime;
     protected Cassette currentCassette;
     protected UnitType currentEnemyTypeCassette;
     protected Ammunition ammunition;
 
-    protected AutomationLoadingSystem(Ammunition ammunition) {
+    public AutomationLoadingSystem(Integer loadTime, Integer disconnectTime, Ammunition ammunition) {
+        this.loadTime = loadTime;
+        this.disconnectTime = disconnectTime;
         this.ammunition = ammunition;
     }
 

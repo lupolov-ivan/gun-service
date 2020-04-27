@@ -23,9 +23,3 @@ uri-builder:
   scheme: http
   host: localhost
   port: 8081
-gun-specifications:
-  protection-level: 100
-  quantity-bursting-cassette: 10
-  capacity-bursting-cassette: 10
-  quantity-armor-piercing-cassette: 15
-  capacity-armor-piercing-cassette: 10

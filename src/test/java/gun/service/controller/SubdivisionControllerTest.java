@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -32,6 +33,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class SubdivisionControllerTest {
 
+    @Value("${uri-builder.port}")
+    private Integer port;
+
     @Autowired
     MockMvc mockMvc;
 
@@ -47,16 +51,32 @@ public class SubdivisionControllerTest {
     }
 
     @Test
-    public void whenCreateSubdivision_ThenSubdivisionMustBeCreated() throws Exception {
-        MockHttpServletResponse response = mockMvc.perform(post("/subdivisions")
+    public void whenCreateEmptySubdivision_ThenSubdivisionMustBeCreated() throws Exception {
+
+        MockHttpServletResponse response = mockMvc.perform(post("/subdivisions/empty")
                 .contentType("application/json")
-                .content(TestUtils.fromResource("controller/subdivision/create_subdivision.json")))
+                .content(TestUtils.fromResource("controller/subdivision/create_empty_subdivision.json")))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse();
 
-        int id = Integer.parseInt(response.getHeader("location").replace("http://localhost:8081/subdivisions/", ""));
+        int id = Integer.parseInt(response.getHeader("location").replace("http://localhost:"+ port +"/subdivisions/", ""));
 
         assertTrue(subdivisionRepository.findById(id).isPresent());
+    }
+
+    @Test
+    public void whenCreateFilledSubdivision_ThenSubdivisionMustBeCreated() throws Exception {
+
+        MockHttpServletResponse response = mockMvc.perform(post("/subdivisions/filled")
+                .contentType("application/json")
+                .content(TestUtils.fromResource("controller/subdivision/create_filled_subdivision.json")))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse();
+
+        int id = Integer.parseInt(response.getHeader("location").replace("http://localhost:"+ port +"/subdivisions/", ""));
+
+        assertTrue(subdivisionRepository.findById(id).isPresent());
+        assertEquals(4, unitRepository.findUnitsBySubdivisionId(id).size());
     }
 
     @Test
@@ -82,9 +102,9 @@ public class SubdivisionControllerTest {
         int subdivisionId1 = subdivisionRepository.save(new Subdivision(null, "ALPHA")).getId();
         int subdivisionId2 = subdivisionRepository.save(new Subdivision(null, "BETA")).getId();
 
-        unitRepository.save(new Unit(null, 2, 4, 100, AFC, ACTIVE, subdivisionId1));
-        unitRepository.save(new Unit(null, 3, 5, 100, AFC, ACTIVE, subdivisionId1));
-        unitRepository.save(new Unit(null, 4, 6, 100, AFC, ACTIVE, subdivisionId2));
+        unitRepository.save(Unit.builder().posX(2).posY(4).protectionLevel(100).unitType(AFC).unitState(ACTIVE).subdivisionId(subdivisionId1).build());
+        unitRepository.save(Unit.builder().posX(3).posY(5).protectionLevel(100).unitType(AFC).unitState(ACTIVE).subdivisionId(subdivisionId1).build());
+        unitRepository.save(Unit.builder().posX(4).posY(6).protectionLevel(100).unitType(AFC).unitState(ACTIVE).subdivisionId(subdivisionId2).build());
 
         mockMvc.perform(get("/subdivisions/{subdivisionId}/guns", subdivisionId1))
                 .andExpect(status().isOk())
@@ -151,7 +171,7 @@ public class SubdivisionControllerTest {
     public void whenRemoveExistUnitFromSubdivision_ThenUnitDeleteAndReturn204Status() throws Exception {
 
         int subdivisionId = subdivisionRepository.save(new Subdivision(null, "ALPHA")).getId();
-        int unitId =  unitRepository.save(new Unit(null, 2, 4, 100, AFC, ACTIVE, subdivisionId)).getId();
+        int unitId =  unitRepository.save(Unit.builder().posX(2).posY(4).protectionLevel(100).unitType(AFC).unitState(ACTIVE).subdivisionId(subdivisionId).build()).getId();
 
         mockMvc.perform(patch("/subdivisions/units/{unitId}/remove", unitId))
                 .andExpect(status().isNoContent());
@@ -174,8 +194,8 @@ public class SubdivisionControllerTest {
     public void whenSetUnitsDeadState_ThenAllUnitsGetDeadStateAndReturn204Status() throws Exception {
 
         int subdivisionId = subdivisionRepository.save(new Subdivision(null, "ALPHA")).getId();
-        int unitId1 =  unitRepository.save(new Unit(null, 2, 4, 100, AFC, ACTIVE, subdivisionId)).getId();
-        int unitId2 =  unitRepository.save(new Unit(null, 3, 5, 100, AFC, ACTIVE, subdivisionId)).getId();
+        int unitId1 =  unitRepository.save(Unit.builder().posX(2).posY(4).protectionLevel(100).unitType(AFC).unitState(ACTIVE).subdivisionId(subdivisionId).build()).getId();
+        int unitId2 =  unitRepository.save(Unit.builder().posX(3).posY(5).protectionLevel(100).unitType(AFC).unitState(ACTIVE).subdivisionId(subdivisionId).build()).getId();
 
         mockMvc.perform(patch("/subdivisions/{subdivisionId}/units/state/dead", subdivisionId))
                 .andExpect(status().isNoContent());
@@ -198,8 +218,8 @@ public class SubdivisionControllerTest {
     public void whenDeleteSubdivision_ThenAllUnitsSetNullSubdivisionIdAndReturn204Status() throws Exception {
 
         int subdivisionId = subdivisionRepository.save(new Subdivision(null, "ALPHA")).getId();
-        int unitId1 =  unitRepository.save(new Unit(null, 2, 4, 100, AFC, ACTIVE, subdivisionId)).getId();
-        int unitId2 =  unitRepository.save(new Unit(null, 3, 5, 100, AFC, ACTIVE, subdivisionId)).getId();
+        int unitId1 =  unitRepository.save(Unit.builder().posX(2).posY(4).protectionLevel(100).unitType(AFC).unitState(ACTIVE).subdivisionId(subdivisionId).build()).getId();
+        int unitId2 =  unitRepository.save(Unit.builder().posX(3).posY(5).protectionLevel(100).unitType(AFC).unitState(ACTIVE).subdivisionId(subdivisionId).build()).getId();
 
         mockMvc.perform(delete("/subdivisions/{subdivisionId}", subdivisionId))
                 .andExpect(status().isNoContent());

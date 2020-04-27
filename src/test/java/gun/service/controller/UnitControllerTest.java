@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -26,6 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 public class UnitControllerTest {
+
+    @Value("${uri-builder.port}")
+    private Integer port;
 
     @Autowired
     MockMvc mockMvc;
@@ -47,7 +51,7 @@ public class UnitControllerTest {
                 .andExpect(status().isCreated())
                 .andReturn().getResponse();
 
-        int id = Integer.parseInt(response.getHeader("location").replace("http://localhost:8081/units/", ""));
+        int id = Integer.parseInt(response.getHeader("location").replace("http://localhost:"+ port +"/units/", ""));
 
         assertTrue(unitRepository.findById(id).isPresent());
     }

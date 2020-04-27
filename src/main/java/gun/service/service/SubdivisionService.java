@@ -1,9 +1,12 @@
 package gun.service.service;
 
+import gun.service.dto.CreateSubdivisionDto;
+import gun.service.dto.Location;
 import gun.service.dto.UnitDto;
 import gun.service.entity.Subdivision;
 import gun.service.entity.Unit;
 import gun.service.entity.UnitState;
+import gun.service.entity.UnitType;
 import gun.service.exceptions.NotFoundException;
 import gun.service.repository.SubdivisionRepository;
 import gun.service.service.gun.AutomaticFireComplex;
@@ -16,28 +19,55 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static gun.service.entity.UnitState.ACTIVE;
 import static gun.service.entity.UnitState.DEAD;
+import static gun.service.entity.UnitType.AFC;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SubdivisionService {
 
-    @Value("${gun-specifications.quantity-bursting-cassette}")
-    private Integer quantityBurstingCassette;
-    @Value("${gun-specifications.capacity-bursting-cassette}")
-    private Integer capacityBurstingCassette;
-    @Value("${gun-specifications.quantity-armor-piercing-cassette}")
-    private Integer quantityArmorPiercingCassette;
-    @Value("${gun-specifications.capacity-armor-piercing-cassette}")
-    private Integer capacityArmorPiercingCassette;
-
     private final BattleManagerService battleManagerService;
     private final UnitService unitService;
     private final SubdivisionRepository subdivisionRepository;
 
-    public Subdivision createSubdivision(Subdivision subdivision) {
+    public Subdivision createEmptySubdivision(Subdivision subdivision) {
         return subdivisionRepository.save(subdivision);
+    }
+
+    public Subdivision createFilledSubdivision(CreateSubdivisionDto dto) {
+        Subdivision subdivision = new Subdivision();
+        subdivision.setName(dto.getName());
+
+        Subdivision subdivisionWithId = subdivisionRepository.save(subdivision);
+
+        List<Location> unitsLocation = dto.getUnitLocation();
+
+        unitsLocation.forEach(location -> {
+            Unit unit = new Unit();
+
+            unit.setPosX(location.getPosX());
+            unit.setPosY(location.getPosY());
+            unit.setProtectionLevel(dto.getProtectionLevel());
+            unit.setUnitType(AFC);
+            unit.setUnitState(ACTIVE);
+
+            unit.setShotPeriod(dto.getShotPeriod());
+            unit.setLoadCassetteTime(dto.getLoadCassetteTime());
+            unit.setDisconnectCassetteTime(dto.getDisconnectCassetteTime());
+
+            unit.setSubdivisionId(subdivisionWithId.getId());
+
+            unit.setCapacityBurstingCassette(dto.getCapacityBurstingCassette());
+            unit.setQuantityBurstingCassette(dto.getQuantityBurstingCassette());
+            unit.setCapacityArmorPiercingCassette(dto.getCapacityArmorPiercingCassette());
+            unit.setQuantityArmorPiercingCassette(dto.getQuantityArmorPiercingCassette());
+
+            unitService.saveUnit(unit);
+        });
+
+        return subdivisionWithId;
     }
 
     public void deleteSubdivision(Integer subdivisionId) {
@@ -62,7 +92,13 @@ public class SubdivisionService {
                     unit.getProtectionLevel(),
                     unit.getUnitType(),
                     unit.getUnitState(),
-                    Ammunition.createAmmunition(quantityBurstingCassette, capacityBurstingCassette, quantityArmorPiercingCassette, capacityArmorPiercingCassette),
+                    unit.getShotPeriod(),
+                    unit.getLoadCassetteTime(),
+                    unit.getDisconnectCassetteTime(),
+                    Ammunition.createAmmunition(unit.getQuantityBurstingCassette(),
+                                                unit.getCapacityBurstingCassette(),
+                                                unit.getQuantityArmorPiercingCassette(),
+                                                unit.getCapacityBurstingCassette()),
                     battleManagerService,
                     unitService
             );
