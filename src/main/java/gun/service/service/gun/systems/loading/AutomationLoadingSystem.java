@@ -1,6 +1,5 @@
 package gun.service.service.gun.systems.loading;
 
-
 import gun.service.entity.UnitType;
 import gun.service.service.gun.ammunition.Ammunition;
 import gun.service.service.gun.ammunition.Cassette;

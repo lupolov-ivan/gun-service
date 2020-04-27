@@ -5,15 +5,12 @@ import gun.service.dto.Location;
 import gun.service.dto.UnitDto;
 import gun.service.entity.Subdivision;
 import gun.service.entity.Unit;
-import gun.service.entity.UnitState;
-import gun.service.entity.UnitType;
 import gun.service.exceptions.NotFoundException;
 import gun.service.repository.SubdivisionRepository;
 import gun.service.service.gun.AutomaticFireComplex;
 import gun.service.service.gun.ammunition.Ammunition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
